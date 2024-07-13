@@ -1,7 +1,6 @@
 package irail
 
 import (
-	"context"
 	"log"
 	"net/http"
 	"time"
@@ -17,11 +16,11 @@ type RLHTTPClient struct {
 }
 
 func (c *RLHTTPClient) Do(req *http.Request) (*http.Response, error) {
-	ctx := context.Background()
-	err := c.Ratelimiter.Wait(ctx) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return nil, err
-	}
+	//ctx := context.Background()
+	//err := c.Ratelimiter.Wait(ctx) // This is a blocking call. Honors the rate limit
+	//if err != nil {
+	//	return nil, err
+	//}
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
