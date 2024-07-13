@@ -109,7 +109,7 @@ func GetLiveboard(station, arriveOrDeparture, lang string, from time.Time) (Live
 	}
 	req.Header.Set("User-Agent", USER_AGENT)
 
-	client := &http.Client{}
+	client := newClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		return Liveboard{}, err

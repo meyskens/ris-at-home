@@ -93,7 +93,7 @@ func GetVehicleCached(id, lang string, date time.Time) (Vehicle, error) {
 	}
 	req.Header.Set("User-Agent", USER_AGENT)
 
-	client := &http.Client{}
+	client := newClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		return Vehicle{}, err
