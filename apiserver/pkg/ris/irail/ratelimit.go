@@ -25,6 +25,10 @@ func (c *RLHTTPClient) Do(req *http.Request) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	if resp.StatusCode == http.StatusTooManyRequests {
+		time.Sleep(1 * time.Second)
+		return c.Do(req)
+	}
 	return resp, nil
 }
 
