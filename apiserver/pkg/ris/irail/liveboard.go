@@ -14,7 +14,7 @@ import (
 )
 
 const API_URL = "https://api.irail.be"
-const USER_AGENT = "RIS-At-Home/1"
+const USER_AGENT = "RIS-At-Home/1  (ris.maartje.dev; maartje@eyskens.me)"
 
 var liveboardCache = make(map[string]Liveboard)
 var liveboardCacheMutex sync.RWMutex
