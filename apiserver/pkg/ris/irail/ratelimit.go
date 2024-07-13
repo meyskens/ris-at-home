@@ -8,7 +8,7 @@ import (
 	"golang.org/x/time/rate"
 )
 
-var rateLimit = rate.NewLimiter(rate.Every(time.Second), 3)
+var rateLimit = rate.NewLimiter(rate.Every(time.Second), 5)
 
 type RLHTTPClient struct {
 	client      *http.Client
