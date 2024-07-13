@@ -26,5 +26,7 @@ WORKDIR /go/src/github.com/meyskens/ris-at-home
 COPY --from=build /go/src/github.com/meyskens/ris-at-home/risapi /usr/local/bin/
 COPY --from=build /go/src/github.com/meyskens/ris-at-home/public /go/src/github.com/meyskens/ris-at-home/public
 
+ENV RIS_PORT=80
+
 ENTRYPOINT [ "/usr/local/bin/risapi" ]
 CMD [ "serve" ]
