@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<head>
+    <title>RIS at Home - Belgium Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vue-multiselect/2.1.6/vue-multiselect.min.css">
+    <script src="assets/stations.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">RIS at Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+        </div>
+    </nav>
+
+
+
+    <div class="container mt-5">
+        <div class="jumbotron bg-light p-5 mt-3 rounded">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="display-4">Your Personal DB Lounge Screen</h1>
+                    <p class="lead">Experience the DB Lounge departure screen right on your own device, featuring live
+                        data from NMBS/SNCB and De Lijn (Germans are suggested to use the actual RIS-Abfahrtstafel
+                        system).</p>
+                    <hr class="my-4">
+                    <p>Get real-time updates and never miss your train or bus again. Perfect for hanging on a wall at
+                        home!</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="assets/preview.png" class="img-fluid" alt="Preview of departure screen">
+                </div>
+            </div>
+        </div>
+
+        <!-- Vue.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-multiselect/2.1.6/vue-multiselect.min.js"></script>
+
+        <!-- Vue-powered Form -->
+        <div id="stationForm">
+            <h2>Select Stations and Stops</h2>
+            <form @submit.prevent="generateLink">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="stations">Stations:</label>
+                            <vue-multiselect v-model="selectedStations" :options="stations" :multiple="true"
+                                label="name" track-by="code" placeholder="Select stations"></vue-multiselect>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="stops">De Lijn Stops IDs (comma-separated):</label>
+                            <input type="text" v-model="deLijnStops" id="stops" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="pages">Number of Pages:</label>
+                            <input type="number" v-model.number="numPages" id="pages" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Generate Link</button>
+            </form>
+            <div v-if="hasSNCBStation && generatedLink" class="alert alert-warning mt-3" role="alert">
+                <strong>Notice:</strong> The first load might take some time as we need to cache a lot of data for SNCB
+                stations.
+            </div>
+            <div v-if="generatedLink" class="alert alert-success mt-3">
+                Generated Link: <a :href="generatedLink" target="_blank">{{ generatedLink }}</a>
+            </div>
+        </div>
+
+        <script>
+            new Vue({
+                el: '#stationForm',
+                components: {
+                    'vue-multiselect': window.VueMultiselect.default
+                },
+                computed: {
+                    hasSNCBStation() {
+
+                        return this.selectedStations.length > 0;
+                    }
+                },
+                data: {
+                    stations: window.stationList.map((e) => {
+                        return { name: e.name, code: e.URI.replace('http://irail.be/stations/NMBS/', '') };
+                    }), // Populate with actual station names
+                    selectedStations: [],
+                    deLijnStops: '',
+                    numPages: 3,
+                    generatedLink: ''
+                },
+                methods: {
+                    generateLink() {
+                        // Example link generation logic
+                        const baseLink = window.location.origin + /ris/;
+                        const deLijnStops = this.deLijnStops.split(',').map(e => e.trim()).join(',');
+                        const stationsParam = `evaNumbers=${this.selectedStations.map(e => e.code).concat(deLijnStops).join(',').replace(/,$/, '')}`;
+                        const pagesParam = `pages=${this.numPages}`;
+                        this.generatedLink = `${baseLink}?${stationsParam}&${pagesParam}`;
+                    }
+                }
+            });
+        </script>
+    </div>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <a href="https://github.com/meyskens/ris-at-home" class="text-muted" style="text-decoration: none;">
+                <img src="assets/github.svg" alt="GitHub" style="height: 24px;"> Fork me on GitHub
+            </a>
+            &nbsp;|&nbsp;
+            <a href="https://blahaj.social/@maartje" class="text-muted" style="text-decoration: none;">
+                <img src="assets/mastodon.svg" alt="Mastodon" style="height: 24px;"> Follow Maartje on Mastodon for more
+                trains
+            </a>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
