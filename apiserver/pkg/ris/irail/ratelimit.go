@@ -2,13 +2,14 @@ package irail
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"time"
 
 	"golang.org/x/time/rate"
 )
 
-var rateLimit = rate.NewLimiter(rate.Every(time.Second), 15)
+var rateLimit = rate.NewLimiter(rate.Every(time.Second), 100)
 
 type RLHTTPClient struct {
 	client      *http.Client
@@ -26,6 +27,7 @@ func (c *RLHTTPClient) Do(req *http.Request) (*http.Response, error) {
 		return nil, err
 	}
 	if resp.StatusCode == http.StatusTooManyRequests {
+		log.Println("Rate limited, waiting 1 second")
 		time.Sleep(1 * time.Second)
 		return c.Do(req)
 	}
