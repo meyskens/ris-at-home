@@ -12,13 +12,13 @@ var vehicleCacheMutex sync.RWMutex
 var vehicleCache = make(map[string]Vehicle)
 
 func init() {
-	// clear Vehicle cache after 4 hours
+	// clear Vehicle cache after 48 hours
 	go func() {
 		for {
 			vehicleCacheMutex.Lock()
 			vehicleCache = make(map[string]Vehicle)
 			vehicleCacheMutex.Unlock()
-			time.Sleep(4 * time.Hour)
+			time.Sleep(48 * time.Hour)
 		}
 	}()
 }
