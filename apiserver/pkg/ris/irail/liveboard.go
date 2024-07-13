@@ -195,6 +195,9 @@ func LiveboardToRISDepartures(station, lang string) ([]ris.Departure, error) {
 		if strings.HasPrefix(transportName, "S") || strings.HasPrefix(transportName, "L") {
 			transportType = "REGIONAL_TRAIN"
 		}
+		if strings.HasPrefix(transportName, "BUS") {
+			transportType = "BUS"
+		}
 
 		stops := []ris.StopPlace{}
 		vias := []ris.Via{}
