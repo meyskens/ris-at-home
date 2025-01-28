@@ -3,7 +3,7 @@ module github.com/meyskens/ris-at-home
 go 1.22.4
 
 require (
-	github.com/golang/glog v1.2.2
+	github.com/golang/glog v1.2.4
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
